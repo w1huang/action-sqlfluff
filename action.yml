@@ -1,4 +1,4 @@
-name: 'Run sqlfluff with reviewdog'
+name: 'A fork of run sqlfluff with reviewdog'
 description: '🐶 Run sqlfluff with reviewdog on pull requests to improve code review experience.'
 author: 'yu-iskw'
 inputs:
