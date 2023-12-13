@@ -67,6 +67,9 @@ if [[ "${SQLFLUFF_COMMAND:?}" == "lint" ]]; then
   set +Eeuo pipefail
   lint_results="sqlfluff-lint.json"
   # shellcheck disable=SC2086,SC2046
+
+  ls -altr
+
   sqlfluff lint \
     --format json \
     $(if [[ "x${SQLFLUFF_CONFIG}" != "x" ]]; then echo "--config ${SQLFLUFF_CONFIG}"; fi) \
@@ -79,6 +82,7 @@ if [[ "${SQLFLUFF_COMMAND:?}" == "lint" ]]; then
     $(if [[ "x${SQLFLUFF_DIALECT}" != "x" ]]; then echo "--dialect ${SQLFLUFF_DIALECT}"; fi) \
     ${SQLFLUFF_PATHS} |
     tee "$lint_results"
+
   sqlfluff_exit_code=$?
 
   echo "name=sqlfluff-results::$(cat <"$lint_results" | jq -r -c '.')" >> $GITHUB_OUTPUT # Convert to a single line
