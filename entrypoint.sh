@@ -1,9 +1,9 @@
 #!/bin/bash
 # shellcheck disable=SC2086
 # NOTE: Ignore violations as 'echo "name=foo::bar" >> $GITHUB_OUTPUT'.
-#set -Eeuo pipefail
+set -Eeuo pipefail
 
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+#SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
 cd "${WORKING_DIRECTORY}" || exit
 
@@ -36,7 +36,7 @@ git config --global --add safe.directory ${WORKING_DIRECTORY}
 
 # Install sqlfluff
 echo '::group::🐶 Installing sqlfluff ... https://github.com/sqlfluff/sqlfluff'
-pip install --no-cache-dir -r "${SCRIPT_DIR}/requirements/requirements.txt" --use-deprecated=legacy-resolver
+pip install --no-cache-dir -r "${WORKING_DIRECTORY}/requirements/requirements.txt" --use-deprecated=legacy-resolver
 # Make sure the version of sqlfluff
 sqlfluff --version
 echo '::endgroup::'
@@ -77,7 +77,7 @@ if [[ "${SQLFLUFF_COMMAND:?}" == "lint" ]]; then
     $(if [[ "x${SQLFLUFF_TEMPLATER}" != "x" ]]; then echo "--templater ${SQLFLUFF_TEMPLATER}"; fi) \
     $(if [[ "x${SQLFLUFF_DISABLE_NOQA}" != "x" ]]; then echo "--disable-noqa ${SQLFLUFF_DISABLE_NOQA}"; fi) \
     $(if [[ "x${SQLFLUFF_DIALECT}" != "x" ]]; then echo "--dialect ${SQLFLUFF_DIALECT}"; fi) \
-    $changed_files |
+    ${SQLFLUFF_PATHS} |
     tee "$lint_results"
   sqlfluff_exit_code=$?
 
@@ -93,7 +93,7 @@ if [[ "${SQLFLUFF_COMMAND:?}" == "lint" ]]; then
 
   lint_results_rdjson="sqlfluff-lint.rdjson"
   cat <"$lint_results" |
-    jq -r -f "${SCRIPT_DIR}/to-rdjson.jq" |
+    jq -r -f "${WORKING_DIRECTORY}/to-rdjson.jq" |
     tee >"$lint_results_rdjson"
 
   cat <"$lint_results_rdjson" |
@@ -129,7 +129,7 @@ elif [[ "${SQLFLUFF_COMMAND}" == "fix" ]]; then
     $(if [[ "x${SQLFLUFF_TEMPLATER}" != "x" ]]; then echo "--templater ${SQLFLUFF_TEMPLATER}"; fi) \
     $(if [[ "x${SQLFLUFF_DISABLE_NOQA}" != "x" ]]; then echo "--disable-noqa ${SQLFLUFF_DISABLE_NOQA}"; fi) \
     $(if [[ "x${SQLFLUFF_DIALECT}" != "x" ]]; then echo "--dialect ${SQLFLUFF_DIALECT}"; fi) \
-    $changed_files
+    ${SQLFLUFF_PATHS}
   sqlfluff_exit_code=$?
   echo "name=sqlfluff-exit-code::${sqlfluff_exit_code}" >> $GITHUB_OUTPUT
 

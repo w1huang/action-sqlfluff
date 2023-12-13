@@ -5,7 +5,7 @@ ENV REVIEWDOG_VERSION="v0.14.1"
 ENV WORKING_DIRECTORY="/workdir"
 WORKDIR "$WORKING_DIRECTORY"
 
-#SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
+SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 
 # hadolint ignore=DL3008
 RUN apt-get update -y \
