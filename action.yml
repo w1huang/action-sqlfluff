@@ -10,10 +10,10 @@ inputs:
 #    description: "Pull request target branch name"
 #    required: false
 #    default: "${{ github.base_ref }}"
-#  working-directory:
-#    description: 'working directory'
-#    required: false
-#    default: '${{ github.workspace }}'
+  working-directory:
+    description: 'working directory'
+    required: false
+    default: '${{ github.workspace }}'
   ### Flags for reviewdog ###
   level:
     description: 'Report level for reviewdog [info,warning,error]'

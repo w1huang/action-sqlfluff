@@ -3,14 +3,14 @@
 # NOTE: Ignore violations as 'echo "name=foo::bar" >> $GITHUB_OUTPUT'.
 #set -Eeuo pipefail
 
-#SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
-cd "$GITHUB_WORKSPACE" || exit
+cd "${WORKING_DIRECTORY}" || exit
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN:?}"
 
 # Avoid 'fatal: detected dubious ownership in repository'
-git config --global --add safe.directory $GITHUB_WORKSPACE
+git config --global --add safe.directory ${WORKING_DIRECTORY}
 
 # Get changed files
 #echo '::group::🐶 Get changed files'
