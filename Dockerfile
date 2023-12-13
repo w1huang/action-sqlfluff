@@ -2,10 +2,10 @@ FROM python:3.10-slim
 
 ENV REVIEWDOG_VERSION="v0.14.1"
 
-ENV WORKING_DIRECTORY="/workdir"
-WORKDIR "$WORKING_DIRECTORY"
+#ENV WORKING_DIRECTORY="/workdir"
+#WORKDIR "$WORKING_DIRECTORY"
 
-SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
+#SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 
 # hadolint ignore=DL3008
 RUN apt-get update -y \
@@ -25,5 +25,9 @@ RUN wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/in
 RUN pip install --no-cache-dir --upgrade pip==23.1.2
 
 # Set the entrypoint
-COPY . "$WORKING_DIRECTORY"
-ENTRYPOINT ["/bin/bash", "-c", "/${WORKING_DIRECTORY}/entrypoint.sh"]
+#COPY . "$WORKING_DIRECTORY"
+#ENTRYPOINT ["/bin/bash", "-c", "/${WORKING_DIRECTORY}/entrypoint.sh"]
+
+COPY entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]

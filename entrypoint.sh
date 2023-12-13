@@ -1,36 +1,38 @@
 #!/bin/bash
 # shellcheck disable=SC2086
 # NOTE: Ignore violations as 'echo "name=foo::bar" >> $GITHUB_OUTPUT'.
-set -Eeuo pipefail
+#set -Eeuo pipefail
 
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+#SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+
+cd "$GITHUB_WORKSPACE" || exit
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN:?}"
 
 # Avoid 'fatal: detected dubious ownership in repository'
-git config --global --add safe.directory /github/workspace
+git config --global --add safe.directory $GITHUB_WORKSPACE
 
 # Get changed files
-echo '::group::🐶 Get changed files'
+#echo '::group::🐶 Get changed files'
 # The command is necessary to get changed files.
 # TODO Fetch only the target branch
-git fetch --prune --depth 10000 --no-tags
+#git fetch --prune --depth 10000 --no-tags
 
-SQL_FILE_PATTERN="${FILE_PATTERN:?}"
-SOURCE_REFERENCE="origin/${GITHUB_PULL_REQUEST_BASE_REF:?}"
-changed_files=$(git diff --name-only --no-color "$SOURCE_REFERENCE" "HEAD" -- "${SQLFLUFF_PATHS:?}" |
-  grep -e "${SQL_FILE_PATTERN:?}" |
-  xargs -I% bash -c 'if [[ -f "%" ]] ; then echo "%"; fi' || :)
-echo "Changed files:"
-echo "$changed_files"
+#SQL_FILE_PATTERN="${FILE_PATTERN:?}"
+#SOURCE_REFERENCE="origin/${GITHUB_PULL_REQUEST_BASE_REF:?}"
+#changed_files=$(git diff --name-only --no-color "$SOURCE_REFERENCE" "HEAD" -- "${SQLFLUFF_PATHS:?}" |
+#  grep -e "${SQL_FILE_PATTERN:?}" |
+#  xargs -I% bash -c 'if [[ -f "%" ]] ; then echo "%"; fi' || :)
+#echo "Changed files:"
+#echo "$changed_files"
 # Halt the job
-if [[ "${changed_files}" == "" ]]; then
-  echo "There is no changed files. The action doesn't scan files."
-  echo "name=sqlfluff-exit-code::0" >> $GITHUB_OUTPUT
-  echo "name=reviewdog-return-code::0" >> $GITHUB_OUTPUT
-  exit 0
-fi
-echo '::endgroup::'
+#if [[ "${changed_files}" == "" ]]; then
+#  echo "There is no changed files. The action doesn't scan files."
+#  echo "name=sqlfluff-exit-code::0" >> $GITHUB_OUTPUT
+#  echo "name=reviewdog-return-code::0" >> $GITHUB_OUTPUT
+#  exit 0
+#fi
+#echo '::endgroup::'
 
 # Install sqlfluff
 echo '::group::🐶 Installing sqlfluff ... https://github.com/sqlfluff/sqlfluff'
@@ -40,23 +42,23 @@ sqlfluff --version
 echo '::endgroup::'
 
 # Install extra python modules
-echo '::group:: Installing extra python modules'
-if [[ "x${EXTRA_REQUIREMENTS_TXT}" != "x" ]]; then
-  pip install --no-cache-dir -r "${EXTRA_REQUIREMENTS_TXT}" --use-deprecated=legacy-resolver
-  # Make sure the installed modules
-  pip list
-fi
-echo '::endgroup::'
+#echo '::group:: Installing extra python modules'
+#if [[ "x${EXTRA_REQUIREMENTS_TXT}" != "x" ]]; then
+#  pip install --no-cache-dir -r "${EXTRA_REQUIREMENTS_TXT}" --use-deprecated=legacy-resolver
+#  # Make sure the installed modules
+#  pip list
+#fi
+#echo '::endgroup::'
 
 # Install dbt packages
-echo '::group:: Installing dbt packages'
-if [[ -f "${INPUT_WORKING_DIRECTORY}/packages.yml" ]]; then
-  default_dir="$(pwd)"
-  cd "$INPUT_WORKING_DIRECTORY"
-  dbt deps --profiles-dir "${SCRIPT_DIR}/resources/dummy_profiles"
-  cd "$default_dir"
-fi
-echo '::endgroup::'
+#echo '::group:: Installing dbt packages'
+#if [[ -f "${INPUT_WORKING_DIRECTORY}/packages.yml" ]]; then
+#  default_dir="$(pwd)"
+#  cd "$INPUT_WORKING_DIRECTORY"
+#  dbt deps --profiles-dir "${SCRIPT_DIR}/resources/dummy_profiles"
+#  cd "$default_dir"
+#fi
+#echo '::endgroup::'
 
 # Lint changed files if the mode is lint
 if [[ "${SQLFLUFF_COMMAND:?}" == "lint" ]]; then
