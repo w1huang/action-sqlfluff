@@ -49,11 +49,11 @@ inputs:
     description: 'The sub command of sqlfluff. One of lint and fix'
     required: false
     default: 'lint'
-#  paths:
-#    description: |
-#      PATH is the path to a sql file or directory to lint.
-#      This can be either a file ('path/to/file.sql'), a path ('directory/of/sql/files'), a single ('-') character to indicate reading from *stdin* or a dot/blank ('.'/' ') which will be interpreted like passing the current working directory as a path argument.
-#    required: true
+  paths:
+    description: |
+      PATH is the path to a sql file or directory to lint.
+      This can be either a file ('path/to/file.sql'), a path ('directory/of/sql/files'), a single ('-') character to indicate reading from *stdin* or a dot/blank ('.'/' ') which will be interpreted like passing the current working directory as a path argument.
+    required: true
 #  file_pattern:
 #    description: "The regular expression to filter checked files"
 #    required: false
@@ -62,14 +62,14 @@ inputs:
 #    description: 'Specifiy encoding to use when reading and writing files. Defaults to autodetect.'
 #    required: false
 #    default: ''
-#  config:
-#    description: |
-#      Include additional config file.
-#      By default the config is generated from the standard configuration files described in the documentation.
-#      This argument allows you to specify an additional configuration file that overrides the standard configuration files.
-#      N.B. cfg format is required.
-#    required: false
-#    default: ''
+  config:
+    description: |
+      Include additional config file.
+      By default the config is generated from the standard configuration files described in the documentation.
+      This argument allows you to specify an additional configuration file that overrides the standard configuration files.
+      N.B. cfg format is required.
+    required: false
+    default: ''
 #  exclude-rules:
 #    description: |
 #      Exclude specific rules.
@@ -93,10 +93,10 @@ inputs:
 #    description: 'Set this flag to ignore inline noqa comments.'
 #    required: false
 #    default: ''
-#  dialect:
-#    description: 'The dialect of SQL to lint'
-#    required: false
-#    default: ''
+  dialect:
+    description: 'The dialect of SQL to lint'
+    required: false
+    default: ''
 #  annotation-level:
 #    description: |
 #      When format is set to github-annotation, default annotation level.
@@ -163,14 +163,14 @@ runs:
 #    EXTRA_REQUIREMENTS_TXT: ${{ inputs.extra_requirements_txt }}
     SQLFLUFF_VERSION: ${{ inputs.sqlfluff_version }}
     SQLFLUFF_COMMAND: ${{ inputs.sqlfluff_command }}
-#    SQLFLUFF_CONFIG: ${{ inputs.config }}
-#    SQLFLUFF_PATHS: ${{ inputs.paths }}
+    SQLFLUFF_CONFIG: ${{ inputs.config }}
+    SQLFLUFF_PATHS: ${{ inputs.paths }}
 #    SQLFLUFF_PROCESSES: ${{ inputs.processes }}
 #    SQLFLUFF_EXCLUDE_RULES: ${{ inputs.exclude-rules }}
 #    SQLFLUFF_RULES: ${{ inputs.rules }}
 #    SQLFLUFF_TEMPLATER: ${{ inputs.templater }}
 #    SQLFLUFF_DISABLE_NOQA: ${{ inputs.disable-noqa }}
-#    SQLFLUFF_DIALECT: ${{ inputs.dialect }}
+    SQLFLUFF_DIALECT: ${{ inputs.dialect }}
 #    GITHUB_PULL_REQUEST_BASE_REF: ${{ inputs.github_base_ref }}
 #    FILE_PATTERN: ${{ inputs.file_pattern }}
 
