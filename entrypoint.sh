@@ -69,6 +69,9 @@ if [[ "${SQLFLUFF_COMMAND:?}" == "lint" ]]; then
   # shellcheck disable=SC2086,SC2046
 
   ls -altr
+  ls -altr resources
+
+  echo ${SQLFLUFF_PATHS}
 
   sqlfluff lint \
     --format json \
